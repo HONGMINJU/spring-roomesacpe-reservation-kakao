@@ -1,12 +1,14 @@
 package nextstep.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
-public class ThemeDto {
+@AllArgsConstructor
+public class ThemeResponseDto {
 
     @Setter
     private Long id;
@@ -14,14 +16,8 @@ public class ThemeDto {
     private String desc;
     private Integer price;
 
-    public ThemeDto(String name, String desc, Integer price) {
+    public ThemeResponseDto(String name, String desc, Integer price) {
         this(0L, name, desc, price);
     }
 
-    public ThemeDto(Long id, String name, String desc, Integer price) {
-        this.id = id;
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
 }
