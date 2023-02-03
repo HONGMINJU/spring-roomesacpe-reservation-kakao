@@ -1,28 +1,33 @@
-package nextstep.dao;
+package nextstep.dao.jdbcConnection;
 
-import lombok.RequiredArgsConstructor;
-import nextstep.entity.Theme;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import javax.sql.DataSource;
+import nextstep.dao.ThemeDao;
+import nextstep.dto.ThemeRequestDto;
+import nextstep.entity.Theme;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("jDBCTemplateThemeDao")
 public class JDBCTemplateThemeDao implements ThemeDao {
 
     private static final String SELECT_BY_THEME_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
+    private static final String DELETE_BY_THEME_ID_SQL = "DELETE FROM THEME WHERE ID = ?";
+    private static final String SELECT_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME";
+    private static final String UPDATE_SQL = "UPDATE THEME SET NAME=?, DESC=?, PRICE=? where ID=?";
+
 
     public final JdbcTemplate jdbcTemplate;
 
-    @Autowired  // 생성자 하나면 @Autowired 생략 가능능
+    @Autowired  // 생성자 하나면 @Autowired 생략 가능
     public JDBCTemplateThemeDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -59,5 +64,20 @@ public class JDBCTemplateThemeDao implements ThemeDao {
         theme.setId(keyHolder.getKey().longValue());
 
         return insertCount;
+    }
+
+    @Override
+    public int deleteTheme(Long id) throws SQLException {
+        return jdbcTemplate.update(DELETE_BY_THEME_ID_SQL, id);
+    }
+
+    @Override
+    public List<Theme> findAll() throws SQLException {
+        return jdbcTemplate.query(SELECT_SQL, themeRowMapper);
+    }
+
+    @Override
+    public int update(ThemeRequestDto themeRequestDto, Long themeId) throws SQLException {
+        return jdbcTemplate.update(UPDATE_SQL, themeRequestDto.getName(), themeRequestDto.getDesc(), themeRequestDto.getPrice(), themeId);
     }
 }

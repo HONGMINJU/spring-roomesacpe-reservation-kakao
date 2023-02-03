@@ -1,5 +1,6 @@
-package nextstep.dao;
+package nextstep.dao.jdbcConnection;
 
+import nextstep.dao.ReservationDao;
 import nextstep.entity.Reservation;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,16 +13,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@Repository
-public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
+@Repository("jDBCTemplateReservationDao")
+public class JDBCTemplateReservationDao implements ReservationDao {
 
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(`date`, `time`, `name`, `theme_id`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT `id`, `date`, `time`, `name`, `theme_id`  FROM RESERVATION WHERE ID = ?";
 
+    private static final String EXIST_BY_THEME_ID_SQL = "SELECT EXISTS(SELECT * FROM RESERVATION WHERE theme_id = ?)";
+    ;
+
     public final JdbcTemplate jdbcTemplate;
 
-    public JDBCTemplateThemeReservationDao(DataSource dataSource) {
+    public JDBCTemplateReservationDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -66,5 +70,10 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
         } catch (EmptyResultDataAccessException err) {
             return null;
         }
+    }
+
+    @Override
+    public boolean existByThemeId(Long themeId) throws SQLException {
+        return jdbcTemplate.queryForObject(EXIST_BY_THEME_ID_SQL, Boolean.class, themeId);
     }
 }

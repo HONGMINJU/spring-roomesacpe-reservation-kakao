@@ -1,10 +1,10 @@
-package nextstep.dao;
+package nextstep.dao.directConnect;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.dao.DatabaseUtil;
+import nextstep.dao.ReservationDao;
 import nextstep.entity.Reservation;
-import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class DirectConnectionThemeReservationDao implements ThemeReservationDao {
+public class DirectConnectionReservationDao implements ReservationDao {
 
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(date, time, name, theme_id) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT * FROM RESERVATION WHERE ID = ?";
+
+    private static final String SELECT_BY_THEME_ID_SQL = "SELECT * FROM RESERVATION WHERE THEME_ID = ?";
+
 
     @Override
     public int insert(Reservation reservation) throws SQLException {
@@ -78,6 +81,23 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
             return (reservations.size() > 0) ? reservations.get(0) : null;
         } catch (SQLException sqlException) {
             return null;
+        } finally {
+            DatabaseUtil.close(con, psmt, resultSet);
+        }
+    }
+
+    @Override
+    public boolean existByThemeId(Long themeId) throws SQLException {
+        Connection con = DatabaseUtil.getConnection();
+        PreparedStatement psmt = null;
+        ResultSet resultSet = null;
+        try {
+            psmt = con.prepareStatement(SELECT_BY_THEME_ID_SQL);
+            psmt.setLong(1, themeId);
+            resultSet = psmt.executeQuery();
+            return resultSet.next();
+        } catch (SQLException sqlException) {
+            return false;
         } finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
