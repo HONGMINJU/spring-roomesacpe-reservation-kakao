@@ -3,7 +3,7 @@ package nextstep.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nextstep.dto.ThemeDto;
+import nextstep.dto.ThemeResponseDto;
 
 @ToString
 @Getter
@@ -26,10 +26,14 @@ public class Theme {
         this.price = price;
     }
 
-    public Theme(ThemeDto themeDto) {
-        this.id = themeDto.getId();
-        this.name = themeDto.getName();
-        this.desc = themeDto.getDesc();
-        this.price = themeDto.getPrice();
+    public Theme(ThemeResponseDto themeResponseDto) {
+        this.id = themeResponseDto.getId();
+        this.name = themeResponseDto.getName();
+        this.desc = themeResponseDto.getDesc();
+        this.price = themeResponseDto.getPrice();
+    }
+
+    public ThemeResponseDto toDto(){
+        return new ThemeResponseDto(this.id, this.name, this.desc, this.price);
     }
 }

@@ -1,21 +1,22 @@
 package nextstep.service;
 
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import nextstep.dao.ReservationDao;
 import nextstep.dao.ThemeDao;
-import nextstep.dao.ThemeReservationDao;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class ThemeReservationServiceImpl implements ThemeReservationService {
+public class ReservationServiceImpl implements ReservationService {
 
-    private final ThemeReservationDao themeReservationDao;
+    private final ReservationDao reservationDao;
     private final ThemeDao themeDao;
 
     private static final Long DEFAULT_THEME_ID = 1L;
@@ -24,13 +25,13 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     public Long reserve(ReservationDto reservationDto) throws SQLException {
         reservationDto.setThemeId(DEFAULT_THEME_ID);
         Reservation reservation = ReservationDto.from(reservationDto);
-        themeReservationDao.insert(reservation);
+        reservationDao.insert(reservation);
         return reservation.getId();
     }
 
     @Override
     public void cancelById(Long id) throws SQLException {
-        int deleteCount = themeReservationDao.deleteReservation(id);
+        int deleteCount = reservationDao.deleteReservation(id);
         if (deleteCount == 0) {
             throw new SQLException();
         }
@@ -38,7 +39,7 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
 
     @Override
     public ReservationDetail findById(Long id) throws SQLException {
-        Reservation reservation = themeReservationDao.findById(id);
+        Reservation reservation = reservationDao.findById(id);
         if (reservation == null) {
             return null;
         }
@@ -47,5 +48,10 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
             return null;
         }
         return new ReservationDetail(reservation, theme);
+    }
+
+    @Override
+    public boolean isExistByThemeId(Long themeId) throws SQLException {
+        return reservationDao.existByThemeId(themeId);
     }
 }

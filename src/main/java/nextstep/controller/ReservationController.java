@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
-import nextstep.service.ThemeReservationService;
+import nextstep.service.ReservationService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -17,11 +17,11 @@ import java.sql.SQLException;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ThemeReservationService themeReservationService;
+    private final ReservationService reservationService;
 
     @GetMapping("/{id}")
     ResponseEntity<ReservationDetail> getReservations(@NonNull @PathVariable("id") Long id) throws SQLException {
-        ReservationDetail reservationDetail = themeReservationService.findById(id);
+        ReservationDetail reservationDetail = reservationService.findById(id);
         if (reservationDetail == null) {
             return ResponseEntity.noContent().build();
         }
@@ -30,14 +30,14 @@ public class ReservationController {
 
     @PostMapping
     ResponseEntity<ReservationDetail> createReservation(@Valid @RequestBody ReservationDto reservationDto) throws SQLException {
-        Long reservationId = themeReservationService.reserve(reservationDto);
+        Long reservationId = reservationService.reserve(reservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Object> cancelReservation(@NonNull @PathVariable("id") Long id) throws SQLException {
         try {
-            themeReservationService.cancelById(id);
+            reservationService.cancelById(id);
             return ResponseEntity.noContent().build();
         } catch (SQLException sqlException) {
             return ResponseEntity.notFound().build();

@@ -3,7 +3,7 @@ package service;
 import nextstep.RoomEscapeWebApplication;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
-import nextstep.service.ThemeReservationService;
+import nextstep.service.ReservationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,18 +18,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
-class ThemeReservationServiceTest {
+class ReservationServiceTest {
     public static final String RESERVATION_DATE = "2022-12-20";
     @Autowired
-    private ThemeReservationService themeReservationService;
+    private ReservationService reservationService;
 
     @Test
     @DisplayName("방탈출 예약하기")
     void test1() throws SQLException{
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:01");
 
-        Long reservationId = themeReservationService.reserve(reservationDto);
-        ReservationDetail findReservation = themeReservationService.findById(reservationId);
+        Long reservationId = reservationService.reserve(reservationDto);
+        ReservationDetail findReservation = reservationService.findById(reservationId);
         assertThat(findReservation).isNotNull();
     }
 
@@ -37,17 +37,17 @@ class ThemeReservationServiceTest {
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2() throws SQLException{
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:02");
-        Long reservationId = themeReservationService.reserve(reservationDto);
+        Long reservationId = reservationService.reserve(reservationDto);
 
         System.out.println("reservationId = " + reservationId);
-        themeReservationService.cancelById(reservationId);
-        assertThat(themeReservationService.findById(reservationId)).isNull();
+        reservationService.cancelById(reservationId);
+        assertThat(reservationService.findById(reservationId)).isNull();
     }
 
     @Test
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
     void test3(){
-        assertThatThrownBy(() -> themeReservationService.cancelById(1000L))
+        assertThatThrownBy(() -> reservationService.cancelById(1000L))
                 .isInstanceOf(SQLException.class);
     }
 
@@ -55,8 +55,8 @@ class ThemeReservationServiceTest {
     @DisplayName("예약된 방을 조회한다.")
     void test4() throws SQLException{
         ReservationDto randomReservation = makeRandomReservationDto(RESERVATION_DATE, "13:04");
-        Long reservationId = themeReservationService.reserve(randomReservation);
-        ReservationDetail reservationDetail = themeReservationService.findById(reservationId);
+        Long reservationId = reservationService.reserve(randomReservation);
+        ReservationDetail reservationDetail = reservationService.findById(reservationId);
 
         assertThat(reservationDetail.getName()).isEqualTo(randomReservation.getName());
     }
@@ -64,7 +64,7 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
     void test5() throws SQLException{
-        ReservationDetail findReservation = themeReservationService.findById(100L);
+        ReservationDetail findReservation = reservationService.findById(100L);
 
         assertThat(findReservation).isNull();
     }
@@ -75,8 +75,8 @@ class ThemeReservationServiceTest {
         ReservationDto reservation1 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
         ReservationDto reservation2 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
 
-        themeReservationService.reserve(reservation1);
-        Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
+        reservationService.reserve(reservation1);
+        Assertions.assertThatThrownBy(() -> reservationService.reserve(reservation2))
                 .isInstanceOf(RuntimeException.class);
     }
 

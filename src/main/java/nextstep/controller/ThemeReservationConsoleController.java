@@ -3,8 +3,7 @@ package nextstep.controller;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
-import nextstep.service.ThemeReservationService;
-import org.springframework.beans.factory.annotation.Value;
+import nextstep.service.ReservationService;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -19,7 +18,7 @@ public class ThemeReservationConsoleController {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private final ThemeReservationService themeReservationService;
+    private final ReservationService reservationService;
 
     public void play() throws SQLException {
         Scanner scanner = new Scanner(System.in);
@@ -42,8 +41,8 @@ public class ThemeReservationConsoleController {
 
                 ReservationDto reservationDto = new ReservationDto(date, time, name, null);
 
-                Long reservationId = themeReservationService.reserve(reservationDto);
-                ReservationDetail findReservation = themeReservationService.findById(reservationId);
+                Long reservationId = reservationService.reserve(reservationDto);
+                ReservationDetail findReservation = reservationService.findById(reservationId);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + findReservation.getId());
@@ -56,7 +55,7 @@ public class ThemeReservationConsoleController {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                ReservationDetail reservation = themeReservationService.findById(id);
+                ReservationDetail reservation = reservationService.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -71,7 +70,7 @@ public class ThemeReservationConsoleController {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                themeReservationService.cancelById(id);
+                reservationService.cancelById(id);
             }
 
             if (input.equals(QUIT)) {

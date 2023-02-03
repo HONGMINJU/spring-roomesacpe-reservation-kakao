@@ -1,5 +1,7 @@
 package nextstep.dao;
 
+import java.util.List;
+import nextstep.dto.ThemeRequestDto;
 import nextstep.entity.Theme;
 
 import java.sql.SQLException;
@@ -10,4 +12,9 @@ public interface ThemeDao {
 
     int insert(Theme theme) throws SQLException;
 
+    int deleteTheme(Long id) throws SQLException;
+
+    List<Theme> findAll() throws SQLException;
+
+    int update(ThemeRequestDto themeRequestDto, Long themeId) throws SQLException;
 }

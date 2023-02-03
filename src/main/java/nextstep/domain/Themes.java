@@ -1,6 +1,6 @@
 package nextstep.domain;
 
-import nextstep.dto.ThemeDto;
+import nextstep.dto.ThemeResponseDto;
 import nextstep.entity.Theme;
 
 import java.util.LinkedList;
@@ -16,16 +16,16 @@ public class Themes {
     private Themes() {
         this.lastId = 1L;
         this.themes = new LinkedList<>();
-        add(new ThemeDto("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
+        add(new ThemeResponseDto("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
     }
 
     public static Themes getInstance() {
         return instance;
     }
 
-    public void add(ThemeDto themeDto) {
-        themeDto.setId(getAutoIncrementId());
-        themes.add(new Theme(themeDto));
+    public void add(ThemeResponseDto themeResponseDto) {
+        themeResponseDto.setId(getAutoIncrementId());
+        themes.add(new Theme(themeResponseDto));
     }
 
     private Long getAutoIncrementId() {

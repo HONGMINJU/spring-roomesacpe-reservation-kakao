@@ -2,7 +2,7 @@ package dao;
 
 import nextstep.RoomEscapeWebApplication;
 import nextstep.entity.Reservation;
-import nextstep.dao.ThemeReservationDao;
+import nextstep.dao.ReservationDao;
 import nextstep.dto.ReservationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
-class ThemeReservationDaoTest {
+class ReservationDaoTest {
 
     private final static Long EXIST_THEME_ID = 1L;
     private final static Long NOT_EXIST_THEME_ID = Long.MAX_VALUE;
@@ -25,17 +25,17 @@ class ThemeReservationDaoTest {
     public static final String RESERVATION_DATE = "2022-12-12";
 
     @Autowired
-    private ThemeReservationDao themeReservationDao;
+    private ReservationDao reservationDao;
 
     @Test
     @DisplayName("방탈출 예약하기")
     void test1() throws SQLException{
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:31", EXIST_THEME_ID);
 
-        themeReservationDao.insert(reservation);
+        reservationDao.insert(reservation);
         Long reservationId = reservation.getId();
         System.out.println("reservationId = " + reservationId);
-        Reservation findReservation = themeReservationDao.findById(reservationId);
+        Reservation findReservation = reservationDao.findById(reservationId);
         assertThat(reservationId).isNotNull();
         assertThat(findReservation).isNotNull();
     }
@@ -44,26 +44,26 @@ class ThemeReservationDaoTest {
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2() throws SQLException{
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
-        themeReservationDao.insert(reservation);
+        reservationDao.insert(reservation);
 
         System.out.println("reservation.getId() = " + reservation.getId());
-        themeReservationDao.deleteReservation(reservation.getId());
-        System.out.println("asd" + themeReservationDao.findById(reservation.getId()));
-        assertThat(themeReservationDao.findById(reservation.getId())).isNull();
+        reservationDao.deleteReservation(reservation.getId());
+        System.out.println("asd" + reservationDao.findById(reservation.getId()));
+        assertThat(reservationDao.findById(reservation.getId())).isNull();
     }
 
     @Test
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
     void test3() throws SQLException{
-        assertThat(themeReservationDao.deleteReservation(NOT_EXIST_RESERVATION_ID)).isZero();
+        assertThat(reservationDao.deleteReservation(NOT_EXIST_RESERVATION_ID)).isZero();
     }
 
     @Test
     @DisplayName("예약된 방을 조회한다.")
     void test4() throws SQLException{
         Reservation randomReservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
-        themeReservationDao.insert(randomReservation);
-        Reservation findReservation = themeReservationDao.findById(randomReservation.getId());
+        reservationDao.insert(randomReservation);
+        Reservation findReservation = reservationDao.findById(randomReservation.getId());
 
         assertThat(findReservation.getName()).isEqualTo(randomReservation.getName());
     }
@@ -71,7 +71,7 @@ class ThemeReservationDaoTest {
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
     void test5() throws SQLException{
-        Reservation findReservation = themeReservationDao.findById(1000000L);
+        Reservation findReservation = reservationDao.findById(1000000L);
 
         assertThat(findReservation).isNull();
     }
@@ -80,7 +80,7 @@ class ThemeReservationDaoTest {
     @DisplayName("존재하지 않는 테마는 예약 할 수 없다.")
     void test6(){
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:06", NOT_EXIST_THEME_ID);
-        assertThatThrownBy(() -> themeReservationDao.insert(reservation)).isInstanceOf(RuntimeException.class); // DataIntegrityViolationException
+        assertThatThrownBy(() -> reservationDao.insert(reservation)).isInstanceOf(RuntimeException.class); // DataIntegrityViolationException
     }
 
     @Test
@@ -88,8 +88,8 @@ class ThemeReservationDaoTest {
     void test7() throws SQLException{
         Reservation reservation1 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
         Reservation reservation2 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
-        themeReservationDao.insert(reservation1);
-        assertThatThrownBy(() -> themeReservationDao.insert(reservation2))
+        reservationDao.insert(reservation1);
+        assertThatThrownBy(() -> reservationDao.insert(reservation2))
                 .isInstanceOf(RuntimeException.class); // DuplicateKeyException
     }
 
