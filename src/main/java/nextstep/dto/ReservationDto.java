@@ -1,13 +1,18 @@
 package nextstep.dto;
 
-import lombok.*;
-import nextstep.entity.Reservation;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import nextstep.entity.Reservation;
 
 @Getter
 @ToString

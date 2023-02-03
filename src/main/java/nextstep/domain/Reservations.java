@@ -1,12 +1,10 @@
 package nextstep.domain;
 
-import nextstep.entity.Reservation;
-import nextstep.dto.ReservationDto;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
+import nextstep.entity.Reservation;
 
 public class Reservations {
 

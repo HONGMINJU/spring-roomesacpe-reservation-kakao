@@ -1,10 +1,9 @@
 package nextstep.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import nextstep.dto.ThemeRequestDto;
 import nextstep.entity.Theme;
-
-import java.sql.SQLException;
 
 public interface ThemeDao {
 

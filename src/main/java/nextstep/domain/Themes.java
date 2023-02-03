@@ -1,10 +1,9 @@
 package nextstep.domain;
 
-import nextstep.dto.ThemeResponseDto;
-import nextstep.entity.Theme;
-
 import java.util.LinkedList;
 import java.util.List;
+import nextstep.dto.ThemeResponseDto;
+import nextstep.entity.Theme;
 
 public class Themes {
 

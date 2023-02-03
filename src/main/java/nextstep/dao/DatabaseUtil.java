@@ -11,7 +11,7 @@ public class DatabaseUtil {
     private static String DATABASE_URL;
 
     @Value("${spring.datasource.username}")
-    private static String USERNAME ;
+    private static String USERNAME;
 
     @Value("${spring.datasource.password}")
     private static String PASSWORD;

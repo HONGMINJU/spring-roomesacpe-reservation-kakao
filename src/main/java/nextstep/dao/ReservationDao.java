@@ -1,8 +1,7 @@
 package nextstep.dao;
 
-import nextstep.entity.Reservation;
-
 import java.sql.SQLException;
+import nextstep.entity.Reservation;
 
 
 public interface ReservationDao {

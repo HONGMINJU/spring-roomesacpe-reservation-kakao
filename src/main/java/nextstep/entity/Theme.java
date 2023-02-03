@@ -33,7 +33,7 @@ public class Theme {
         this.price = themeResponseDto.getPrice();
     }
 
-    public ThemeResponseDto toDto(){
+    public ThemeResponseDto toDto() {
         return new ThemeResponseDto(this.id, this.name, this.desc, this.price);
     }
 }

@@ -1,10 +1,10 @@
 package nextstep.entity;
 
-import lombok.Getter;
-import lombok.ToString;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.ToString;
 
 @ToString
 @Getter

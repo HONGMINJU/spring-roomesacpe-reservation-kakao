@@ -1,5 +1,9 @@
 package nextstep.dao.jdbcConnection;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.sql.DataSource;
 import nextstep.dao.ReservationDao;
 import nextstep.entity.Reservation;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -7,11 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @Repository("jDBCTemplateReservationDao")
 public class JDBCTemplateReservationDao implements ReservationDao {

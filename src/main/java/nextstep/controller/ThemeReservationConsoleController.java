@@ -1,13 +1,12 @@
 package nextstep.controller;
 
+import java.sql.SQLException;
+import java.util.Scanner;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
 import nextstep.service.ReservationService;
 import org.springframework.stereotype.Component;
-
-import java.sql.SQLException;
-import java.util.Scanner;
 
 @Component
 @RequiredArgsConstructor
